@@ -20,6 +20,8 @@ echo VARIANT_ID=bootserver >> /usr/lib/os-release
 dnf -y --exclude=rootfiles --setopt="install_weak_deps=False" install \
 	@^workstation-product-environment \
 	greenboot-default-health-checks \
+	freeipa-client \
+	glibc-all-langpacks \
 	@development-tools \
 	libevent-devel \
 	pcsc-lite-devel \
