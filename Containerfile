@@ -39,6 +39,13 @@ dnf -y install \
 	libevent-devel \
 	sqlite3-devel \
 	code \
+	mc \
+	cockpit-selinux \
+	cockpit-storaged \
+	cockpit-bridge \
+	cockpit-system \
+	cockpit-networkmanager \
+	cockpit-ostree \
 	f3
 
 dnf -y clean all
