@@ -9,6 +9,7 @@ LABEL org.opencontainers.image.name=${imagename} \
 	org.opencontainers.image.vendor="Dirk Gottschalk" \
 	org.opencontainers.image.author="Dirk Gottschalk"
 
+# Setup the basic system
 RUN <<END_OF_BLOCK
 set -eu
 
@@ -20,6 +21,7 @@ dnf -y --exclude="rootfiles" --exclude="gnome-initial-setup" --setopt="install_w
 	chromium \
 	evolution \
 	cockpit \
+	bootc-gtk
 
 dnf -y clean all
 
