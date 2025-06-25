@@ -25,6 +25,9 @@ dnf -y clean all
 
 END_OF_BLOCK
 
+COPY etc /etc
+COPY --chown=root:root --chmod=600 authorized_keys /usr/ssh/root.keys
+
 RUN <<END_OF_BLOCK
 set -eu
 
@@ -33,11 +36,11 @@ dnf -y install \
 	mingw64* \
 	@c-development \
 	glib2-devel \
-	grk4-devel \
+	gtk4-devel \
 	mariadb-connector-c-devel \
 	pcsc-lite-devel \
 	libevent-devel \
-	sqlite3-devel \
+	sqlite-devel \
 	code \
 	mc \
 	cockpit-selinux \
@@ -50,10 +53,6 @@ dnf -y install \
 
 dnf -y clean all
 END_OF_BLOCK
-
-
-COPY --chown=root:root --chmod=600 authorized_keys /usr/ssh/root.keys
-COPY etc /etc
 
 RUN <<END_OF_BLOCK
 set -eu
