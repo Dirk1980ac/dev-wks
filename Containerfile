@@ -60,6 +60,7 @@ dnf install \
 	cockpit-ostree \
 	testdisk \
 	sleuthkit \
+	zsh \
 	f3
 
 dnf -y clean all
