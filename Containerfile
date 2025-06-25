@@ -1,38 +1,70 @@
 FROM registry.fedoraproject.org/fedora-bootc:latest
 
 ARG buildid="unset"
+ENV imagename="dev-wks"
 
-LABEL org.opencontainers.image.version=${buildid}
-LABEL org.opencontainers.image.description="Developer workstation"
-LABEL org.opencontainers.image.vendor="Dirk Gottschalk"
-LABEL org.opencontainers.image.author="Dirk Gottschalk"
+LABEL org.opencontainers.image.name=${imagename} \
+	org.opencontainers.image.version=${buildid} \
+	org.opencontainers.image.description="Developer workstation" \
+	org.opencontainers.image.vendor="Dirk Gottschalk" \
+	org.opencontainers.image.author="Dirk Gottschalk"
 
+RUN <<END_OF_BLOCK
+set -eu
+
+dnf -y --exclude="rootfiles" --exclude="gnome-initial-setup" --setopt="install_weak_deps=False" install \
+	@^workstation-product-environment \
+	greenboot-default-health-checks \
+	freeipa-client \
+	glibc-all-langpacks \
+	chromium \
+	evolution \
+	cockpit \
+
+dnf -y clean all
+
+END_OF_BLOCK
+
+RUN <<END_OF_BLOCK
+set -eu
+
+dnf -y install \
+	@development-tools \
+	mingw64* \
+	@c-development \
+	glib2-devel \
+	grk4-devel \
+	mariadb-connector-c-devel \
+	pcsc-lite-devel \
+	libevent-devel \
+	sqlite3-devel \
+	code \
+	f3
+
+dnf -y clean all
+END_OF_BLOCK
+
+
+COPY --chown=root:root --chmod=600 authorized_keys /usr/ssh/root.keys
 COPY etc /etc
 
 RUN <<END_OF_BLOCK
 set -eu
 
-mkdir -p /usr/bootc-image
-echo "IMAGE_ID=dev-wks" >> /etc/os-release
-echo "IMAGE_VERSION=${buildid}" >> /etc/os-release
+echo "Writing image version information"
+echo "IMAGE_ID=${imagename}" >>/usr/lib/os-release
+echo "IMAGE_VERSION=${buildid}" >>/usr/lib/os-release
 
-echo VARIANT_ID=bootserver >> /usr/lib/os-release
-dnf -y --exclude=rootfiles --setopt="install_weak_deps=False" install \
-	@^workstation-product-environment \
-	greenboot-default-health-checks \
-	freeipa-client \
-	glibc-all-langpacks \
-	@development-tools \
-	libevent-devel \
-	pcsc-lite-devel \
-	@c-development \
-	glib2-devel \
-	gtk4-devel \
-	chromium \
-	mingw64* \
-	evolution \
-	cockpit \
-	greenboot \
-	code
+echo "Enable services."
+systemctl enable \
+	cockpit.socket \
+	sshd \
+	systemd-zram-setup@zram0.service \
+	onboot-update.service
 
+echo "Masking update timer."
+systemctl mask bootc-fetch-apply-updates.timer
+
+bootc container lint
+echo "The magic is done!"
 END_OF_BLOCK
