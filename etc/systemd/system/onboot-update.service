@@ -1,8 +1,7 @@
 [Unit]
-Before=multi-user.target
+Before=systemd-user-sessions.service
 Description=Auto-Update image on boot.
 ConditionPathExists=/run/ostree-booted
-Wants=network-online.target
 After=network-online.target
 
 [Service]
