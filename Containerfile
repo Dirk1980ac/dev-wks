@@ -13,7 +13,11 @@ LABEL org.opencontainers.image.name=${imagename} \
 RUN <<END_OF_BLOCK
 set -eu
 
-dnf -y --exclude="rootfiles" --exclude="gnome-initial-setup" --setopt="install_weak_deps=False" install \
+dnf install \
+	--assumeyes \
+	--exclude="rootfiles" \
+	--exclude="gnome-initial-setup" \
+	--setopt="install_weak_deps=False" \
 	@^workstation-product-environment \
 	greenboot-default-health-checks \
 	freeipa-client \
@@ -33,7 +37,8 @@ COPY --chown=root:root --chmod=600 authorized_keys /usr/ssh/root.keys
 RUN <<END_OF_BLOCK
 set -eu
 
-dnf -y install \
+dnf install \
+	--assumeyes \
 	@development-tools \
 	mingw64* \
 	@c-development \
@@ -43,7 +48,7 @@ dnf -y install \
 	pcsc-lite-devel \
 	libevent-devel \
 	sqlite-devel \
-	toolbox
+	toolbox \
 	code \
 	htop \
 	mc \
@@ -69,8 +74,7 @@ echo "Enable services."
 systemctl enable \
 	cockpit.socket \
 	sshd \
-	systemd-zram-setup@zram0.service \
-	onboot-update.service
+	systemd-zram-setup@zram0.service
 
 echo "Masking update timer."
 systemctl mask bootc-fetch-apply-updates.timer
