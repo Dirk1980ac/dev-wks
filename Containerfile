@@ -58,6 +58,8 @@ dnf install \
 	cockpit-system \
 	cockpit-networkmanager \
 	cockpit-ostree \
+	testdisk \
+	sleuthkit \
 	f3
 
 dnf -y clean all
