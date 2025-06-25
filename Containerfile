@@ -74,7 +74,8 @@ echo "Enable services."
 systemctl enable \
 	cockpit.socket \
 	sshd \
-	systemd-zram-setup@zram0.service
+	systemd-zram-setup@zram0.service \
+	onboot-update.service
 
 echo "Masking update timer."
 systemctl mask bootc-fetch-apply-updates.timer
