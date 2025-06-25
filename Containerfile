@@ -43,7 +43,9 @@ dnf -y install \
 	pcsc-lite-devel \
 	libevent-devel \
 	sqlite-devel \
+	toolbox
 	code \
+	htop \
 	mc \
 	cockpit-selinux \
 	cockpit-storaged \
