@@ -45,6 +45,7 @@ dnf install \
 	glib2-devel \
 	gtk4-devel \
 	mariadb-connector-c-devel \
+	fedora-chromium-config-gssapi \
 	pcsc-lite-devel \
 	libevent-devel \
 	sqlite-devel \
@@ -60,6 +61,7 @@ dnf install \
 	cockpit-ostree \
 	testdisk \
 	sleuthkit \
+	filezilla \
 	zsh \
 	f3
 
