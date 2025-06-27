@@ -80,7 +80,7 @@ systemctl enable \
 	cockpit.socket \
 	sshd \
 	systemd-zram-setup@zram0.service \
-	onboot-update.service
+	shutdown-update.service
 
 echo "Masking update timer."
 systemctl mask bootc-fetch-apply-updates.timer
