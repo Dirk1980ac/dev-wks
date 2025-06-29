@@ -16,7 +16,6 @@ set -eu
 dnf install \
 	--assumeyes \
 	--exclude="rootfiles" \
-	--exclude="gnome-initial-setup" \
 	--setopt="install_weak_deps=False" \
 	@^workstation-product-environment \
 	greenboot-default-health-checks \
@@ -31,6 +30,7 @@ dnf -y clean all
 
 END_OF_BLOCK
 
+COPY systemd /usr/lib/systemd
 COPY etc /etc
 COPY --chown=root:root --chmod=600 authorized_keys /usr/ssh/root.keys
 
@@ -40,7 +40,9 @@ set -eu
 dnf install \
 	--assumeyes \
 	@development-tools \
-	mingw64* \
+	mingw64-libssh2 \
+	mingw64-gtk4 \
+	mingw64-glib2 \
 	@c-development \
 	glib2-devel \
 	gtk4-devel \
@@ -80,9 +82,10 @@ systemctl enable \
 	cockpit.socket \
 	sshd \
 	systemd-zram-setup@zram0.service \
-	shutdown-update.service
+	bootc-fetch-update-only.service \
+	bootc-fetch-update-only.timer
 
-echo "Masking update timer."
+echo "Mask update and apply timer to avoid auto-reboot."
 systemctl mask bootc-fetch-apply-updates.timer
 
 bootc container lint

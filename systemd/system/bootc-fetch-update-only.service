@@ -1,0 +1,12 @@
+[Unit]
+# Before=systemd-user-sessions.service
+Description=Auto-Update image on boot.
+ConditionPathExists=/run/ostree-booted
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bootc update --quiet
+
+[Install]
+WantedBy=multi-user.target
