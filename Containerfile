@@ -18,27 +18,68 @@ dnf install \
 	--exclude="rootfiles" \
 	--setopt="install_weak_deps=False" \
 	@^workstation-product-environment \
-	greenboot-default-health-checks \
-	freeipa-client \
 	glibc-all-langpacks \
-	chromium \
-	evolution \
-	cockpit \
-	bootc-gtk
+	zsh
 
 dnf -y clean all
 
 END_OF_BLOCK
 
-COPY systemd /usr/lib/systemd
-COPY etc /etc
 COPY --chown=root:root --chmod=600 authorized_keys /usr/ssh/root.keys
+COPY static /usr
+COPY etc /etc
 
+# Domain membership and remote admin
 RUN <<END_OF_BLOCK
 set -eu
 
+echo "Install base packages:"
+
 dnf install \
 	--assumeyes \
+	--setopt="install_weak_deps=False" \
+	freeipa-client \
+	cockpit \
+	cockpit-selinux \
+	cockpit-storaged \
+	cockpit-bridge \
+	cockpit-system \
+	cockpit-networkmanager \
+	cockpit-ostree
+
+dnf -y clean all
+END_OF_BLOCK
+
+# CLI tools
+RUN <<END_OF_BLOCK
+set -eu
+
+echo "Install cli tools packages:"
+
+dnf install \
+	--assumeyes \
+	--setopt="install_weak_deps=False" \
+	htop \
+	mc \
+	testdisk \
+	sleuthkit \
+	f3 \
+	pass \
+	yubikey-manager \
+	pcsc-tools \
+	toolbox
+
+dnf -y clean all
+END_OF_BLOCK
+
+# Developement packages
+RUN <<END_OF_BLOCK
+set -eu
+
+echo "Install Developement packages:"
+dnf install \
+	--assumeyes \
+	--setopt="install_weak_deps=False" \
 	@development-tools \
 	mingw64-libssh2 \
 	mingw64-gtk4 \
@@ -47,28 +88,35 @@ dnf install \
 	glib2-devel \
 	gtk4-devel \
 	mariadb-connector-c-devel \
-	fedora-chromium-config-gssapi \
 	pcsc-lite-devel \
 	libevent-devel \
-	sqlite-devel \
-	toolbox \
-	code \
-	htop \
-	mc \
-	cockpit-selinux \
-	cockpit-storaged \
-	cockpit-bridge \
-	cockpit-system \
-	cockpit-networkmanager \
-	cockpit-ostree \
-	testdisk \
-	sleuthkit \
-	filezilla \
-	zsh \
-	f3
+	sqlite-devel
 
 dnf -y clean all
-rm /var/{log,cache,lib,spool,account,www} -rf
+END_OF_BLOCK
+
+# GUI
+RUN <<END_OF_BLOCK
+set -eu
+
+echo "Install GUI software:"
+
+dnf install \
+	--assumeyes \
+	--setopt="install_weak_deps=False" \
+	fedora-chromium-config-gssapi \
+	fedora-chromium-config \
+	fedora-chromium-config-gssapi \
+	fedora-chromium-config-gnome \
+	code \
+	filezilla \
+	gnome-tweaks \
+	sqlitebrowser \
+	chromium \
+	evolution \
+	bootc-gtk
+
+dnf -y clean all
 END_OF_BLOCK
 
 RUN <<END_OF_BLOCK
@@ -86,8 +134,10 @@ systemctl enable \
 	bootc-fetch-update-only.service \
 	bootc-fetch-update-only.timer
 
-echo "Mask update and apply timer to avoid auto-reboot."
+echo "Masking update timer."
 systemctl mask bootc-fetch-apply-updates.timer
+
+rm /var/{log,cache,lib,spool,account,www} -rf
 
 bootc container lint
 echo "The magic is done!"
