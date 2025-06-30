@@ -68,6 +68,7 @@ dnf install \
 	f3
 
 dnf -y clean all
+rm /var/{log,cache,lib,spool,account,www} -rf
 END_OF_BLOCK
 
 RUN <<END_OF_BLOCK
