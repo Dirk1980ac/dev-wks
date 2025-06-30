@@ -26,7 +26,7 @@ dnf -y clean all
 END_OF_BLOCK
 
 COPY --chown=root:root --chmod=600 authorized_keys /usr/ssh/root.keys
-COPY static /usr
+COPY systemd /usr/lib/systemd
 COPY etc /etc
 
 # Domain membership and remote admin
