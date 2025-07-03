@@ -1,4 +1,4 @@
-name: Build and Push Multi-Arch Docker Images
+name: Build and Push Multi-Arch Container Images
 
 on:
   push:
@@ -54,11 +54,13 @@ jobs:
         run: |
           echo "TAGS=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:stable,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_ENV
 
-      - name: Build and push multi-arch Docker image
+      - name: Build and push multi-arch Container image
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./Containerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ env.TAGS }}
           provenance: false
+          
