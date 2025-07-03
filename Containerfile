@@ -9,6 +9,10 @@ LABEL org.opencontainers.image.name=${imagename} \
 	org.opencontainers.image.vendor="Dirk Gottschalk" \
 	org.opencontainers.image.author="Dirk Gottschalk"
 
+COPY --chown=root:root --chmod=600 authorized_keys /usr/ssh/root.keys
+COPY systemd /usr/lib/systemd
+COPY etc /etc
+
 # Setup the basic system
 RUN <<END_OF_BLOCK
 set -eu
@@ -19,25 +23,7 @@ dnf install \
 	--setopt="install_weak_deps=False" \
 	@^workstation-product-environment \
 	glibc-all-langpacks \
-	zsh
-
-dnf -y clean all
-
-END_OF_BLOCK
-
-COPY --chown=root:root --chmod=600 authorized_keys /usr/ssh/root.keys
-COPY systemd /usr/lib/systemd
-COPY etc /etc
-
-# Domain membership and remote admin
-RUN <<END_OF_BLOCK
-set -eu
-
-echo "Install base packages:"
-
-dnf install \
-	--assumeyes \
-	--setopt="install_weak_deps=False" \
+	zsh \
 	freeipa-client \
 	cockpit \
 	cockpit-selinux \
@@ -45,20 +31,7 @@ dnf install \
 	cockpit-bridge \
 	cockpit-system \
 	cockpit-networkmanager \
-	cockpit-ostree
-
-dnf -y clean all
-END_OF_BLOCK
-
-# CLI tools
-RUN <<END_OF_BLOCK
-set -eu
-
-echo "Install cli tools packages:"
-
-dnf install \
-	--assumeyes \
-	--setopt="install_weak_deps=False" \
+	cockpit-ostree \
 	htop \
 	mc \
 	testdisk \
@@ -67,19 +40,7 @@ dnf install \
 	pass \
 	yubikey-manager \
 	pcsc-tools \
-	toolbox
-
-dnf -y clean all
-END_OF_BLOCK
-
-# Developement packages
-RUN <<END_OF_BLOCK
-set -eu
-
-echo "Install Developement packages:"
-dnf install \
-	--assumeyes \
-	--setopt="install_weak_deps=False" \
+	toolbox \
 	@development-tools \
 	mingw64-libssh2 \
 	mingw64-gtk4 \
@@ -90,20 +51,7 @@ dnf install \
 	mariadb-connector-c-devel \
 	pcsc-lite-devel \
 	libevent-devel \
-	sqlite-devel
-
-dnf -y clean all
-END_OF_BLOCK
-
-# GUI
-RUN <<END_OF_BLOCK
-set -eu
-
-echo "Install GUI software:"
-
-dnf install \
-	--assumeyes \
-	--setopt="install_weak_deps=False" \
+	sqlite-devel \
 	fedora-chromium-config-gssapi \
 	fedora-chromium-config \
 	fedora-chromium-config-gssapi \
@@ -114,13 +62,14 @@ dnf install \
 	sqlitebrowser \
 	chromium \
 	evolution \
-	bootc-gtk
+	bootc-gtk \
+	gtk4-devel-docs \
+	glib2-doc \
+	pcsc-lite-doc \
+	glibc-doc \
+	virt-manager
 
 dnf -y clean all
-END_OF_BLOCK
-
-RUN <<END_OF_BLOCK
-set -eu
 
 echo "Writing image version information"
 echo "IMAGE_ID=${imagename}" >>/usr/lib/os-release
@@ -137,7 +86,7 @@ systemctl enable \
 echo "Masking update timer."
 systemctl mask bootc-fetch-apply-updates.timer
 
-rm /var/{log,cache,lib,spool,account,www} -rf
+rm /var/{log,cache,spool,account,www} -rf
 
 bootc container lint
 echo "The magic is done!"
