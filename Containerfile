@@ -67,7 +67,8 @@ dnf install \
 	glib2-doc \
 	pcsc-lite-doc \
 	glibc-doc \
-	virt-manager
+	virt-manager \
+	gnome-extensions-app
 
 dnf -y clean all
 
