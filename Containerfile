@@ -28,7 +28,7 @@ dnf -y install \
 dnf -y install rpmfusion-free-release-tainted rpmfusion-nonfree-release-tainted
 dnf -y --repo=rpmfusion-nonfree-tainted --repo=rpmfusion-free-tainted install "*-firmware"
 
-dnf install --setopt="install_weak_deps=False" \
+dnf -y install --setopt="install_weak_deps=False" \
 	glibc-all-langpacks \
 	zsh \
 	freeipa-client \
