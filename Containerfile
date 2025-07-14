@@ -103,7 +103,7 @@ systemctl enable \
 echo "Masking update timer."
 systemctl mask bootc-fetch-apply-updates.timer
 
-rm /var/{log,cache,spool,account,www} -rf
+rm /var/{log,cache,spool} -rf
 
 bootc container lint
 echo "The magic is done!"
