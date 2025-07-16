@@ -77,6 +77,15 @@ dnf -y install --setopt="install_weak_deps=False" \
 	virt-manager \
 	gnome-extensions-app
 
+echo "Installing local packages."
+ARCH=$(arch)
+shopt -s extglob
+shopt -s nullglob
+
+for file in /packages/*.@(${ARCH}.rpm|noarch.rpm); do
+	dnf -y install "$file"
+done
+
 dnf -y clean all
 END_OF_BLOCK
 
