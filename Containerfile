@@ -94,6 +94,8 @@ COPY --chmod=600 configs/sshd-00-0local.conf /etc/ssh/sshd_config.d/00-0local.co
 COPY --chmod=644 configs/polkit-40-freeipa.rules /etc/polkit-1/rules.d/40-freeipa.rules
 COPY --chmod=644 configs/rpm-ostreed.conf /etc/rpm-ostreed.conf
 COPY --chmod=644 configs/containers-toolbix.conf /etc/containers/toolbox.conf
+COPY --chmod=644 configs/containers-policy.json /etc/containers/policy.json
+COPY --chmod=644 static/cosign.pub /usr/share/containers/cosign.pub
 COPY systemd /usr/lib/systemd/system
 COPY skel /etc/skel
 

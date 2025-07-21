@@ -1,0 +1,22 @@
+{
+	"default": [
+		{
+			"type": "reject"
+		}
+	],
+	"transports": {
+		"docker": {
+			"docker.io/dirk1980/dev-wks": [
+				{
+					"type": "sigstoreSigned",
+					"keyPaths": [
+						"/usr/share/containers/cosign.pub"
+					],
+					"signedIdentity": {
+						"type": "matchRepository"
+					}
+				}
+			]
+		}
+	}
+}
