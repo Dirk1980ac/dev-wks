@@ -1,13 +1,7 @@
 FROM registry.fedoraproject.org/fedora-bootc:latest
 
-ARG buildid="unset"
+# Set image name
 ENV imagename="dev-wks"
-
-LABEL org.opencontainers.image.name=${imagename} \
-	org.opencontainers.image.version=${buildid} \
-	org.opencontainers.image.description="Developer workstation" \
-	org.opencontainers.image.vendor="Dirk Gottschalk" \
-	org.opencontainers.image.author="Dirk Gottschalk"
 
 # Install basic system
 RUN dnf install -y --exclude="rootfiles" --setopt="install_weak_deps=False" \
@@ -98,6 +92,15 @@ COPY --chmod=644 configs/containers-policy.json /etc/containers/policy.json
 COPY --chmod=644 static/cosign.pub /usr/share/containers/cosign.pub
 COPY systemd /usr/lib/systemd/system
 COPY skel /etc/skel
+
+# Add metadata after package installation to avoid a rebuilding the whole image
+# if it is not necessary if it is not necessary.
+ARG buildid="unset"
+LABEL org.opencontainers.image.name=${imagename} \
+	org.opencontainers.image.version=${buildid} \
+	org.opencontainers.image.description="Developer workstation" \
+	org.opencontainers.image.vendor="Dirk Gottschalk" \
+	org.opencontainers.image.author="Dirk Gottschalk"
 
 # Final configuration
 RUN <<END_OF_BLOCK
