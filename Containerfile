@@ -112,8 +112,8 @@ COPY --chmod=600 configs/sshd-00-0local.conf /etc/ssh/sshd_config.d/00-0local.co
 COPY --chmod=644 configs/containers-toolbox.conf /etc/containers/toolbox.conf
 COPY --chmod=644 configs/containers-policy.json /etc/containers/policy.json
 COPY --chmod=644 keys/dirk1980.pub /usr/share/containers/dirk1980.pub
-COPY --chmod=644 keys/dirk1980.pub /usr/share/containers/dirk1980-skopeo.pub
-COPY --chmod=644 keys/dirk1980.pub /usr/share/containers/dirk1980-skopeo-backup.pub
+COPY --chmod=644 keys/dirk1980-skopeo.pub /usr/share/containers/dirk1980-skopeo.pub
+COPY --chmod=644 keys/dirk1980-skopeo-backup.pub /usr/share/containers/dirk1980-skopeo-backup.pub
 COPY --chmod=644 configs/rpm-ostreed.conf /etc/rpm-ostreed.conf
 COPY --chmod=644 systemd /usr/lib/systemd/system
 COPY skel /etc/skel
