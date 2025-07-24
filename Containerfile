@@ -107,7 +107,7 @@ END_OF_BLOCK
 
 # Copy prepared files
 COPY --chmod=644 configs/polkit-40-freeipa.rules /etc/polkit-1/rules.d/40-freeipa.rules
-COPY --chmod=644 registries-sigstore.yaml /etc/containers/registries.d/sigstore.yaml
+COPY --chmod=644 configs/registries-sigstore.yaml /etc/containers/registries.d/sigstore.yaml
 COPY --chmod=600 configs/sshd-00-0local.conf /etc/ssh/sshd_config.d/00-0local.conf
 COPY --chmod=644 configs/containers-toolbox.conf /etc/containers/toolbox.conf
 COPY --chmod=644 configs/containers-policy.json /etc/containers/policy.json
