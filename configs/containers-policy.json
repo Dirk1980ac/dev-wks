@@ -13,6 +13,20 @@
 					"signedIdentity": {
 						"type": "matchRepoDigestOrExact"
 					}
+				},
+				{
+					"type": "sigstoreSigned",
+					"keyPath": "/usr/share/containers/dirk1980-skopeo.pub",
+					"signedIdentity": {
+						"type": "matchRepoDigestOrExact"
+					}
+				},
+				{
+					"type": "sigstoreSigned",
+					"keyPath": "/usr/share/containers/dirk1980-skopeo-backup.pub",
+					"signedIdentity": {
+						"type": "matchRepoDigestOrExact"
+					}
 				}
 			]
 		}
