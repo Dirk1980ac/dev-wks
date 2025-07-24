@@ -1,20 +1,20 @@
 {
-  "default": [
-    {
-      "type": "insecureAcceptAnything"
-    }
-  ],
-  "transports": {
-    "docker": {
-      "docker.io/dirk1980/dev-wks": [
-        {
-          "type": "sigstoreSigned",
-          "keyPath": "/usr/share/containers/dirk1980.pub",
-          "signedIdentity": {
-            "type": "matchRepoDigestOrExact"
-          }
-        }
-      ]
-    }
-  }
+	"default": [
+		{
+			"type": "insecureAcceptAnything"
+		}
+	],
+	"transports": {
+		"docker": {
+			"docker.io/dirk1980/dev-wks": [
+				{
+					"type": "sigstoreSigned",
+					"keyPath": "/usr/share/containers/dirk1980.pub",
+					"signedIdentity": {
+						"type": "matchRepoDigestOrExact"
+					}
+				}
+			]
+		}
+	}
 }
