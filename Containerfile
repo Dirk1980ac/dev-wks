@@ -131,6 +131,11 @@ set -eu
 echo "IMAGE_ID=${imagename}" >>/usr/lib/os-release
 echo "IMAGE_VERSION=${buildid}" >>/usr/lib/os-release
 
+echo <<EOE >>/usr/share/containers/containers.conf
+"[registries]
+	use-sigstore-attachments = true"
+EOE
+
 systemctl enable \
 	cockpit.socket \
 	sshd \
