@@ -92,7 +92,7 @@ COPY --chmod=644 configs/polkit-40-freeipa.rules /etc/polkit-1/rules.d/40-freeip
 COPY --chmod=644 configs/rpm-ostreed.conf /etc/rpm-ostreed.conf
 COPY --chmod=644 configs/containers-toolbox.conf /etc/containers/toolbox.conf
 COPY --chmod=644 configs/containers-policy.json /etc/containers/policy.json
-COPY --chmod=644 static/cosign.pub /usr/share/containers/cosign.pub
+COPY --chmod=644 static/dirk1980.pub /usr/share/containers/dirk1980.pub
 COPY systemd /usr/lib/systemd/system
 COPY skel /etc/skel
 
