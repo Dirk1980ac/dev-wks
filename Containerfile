@@ -15,7 +15,6 @@ RUN dnf install -y \
 	glibc-all-langpacks && \
 	dnf -y clean all
 
-
 # Copy vscode repository.
 COPY --chmod=644 configs/dnf-vscode.repo /etc/yum.repos.d/vscode.repo
 
@@ -23,14 +22,17 @@ COPY --chmod=644 configs/dnf-vscode.repo /etc/yum.repos.d/vscode.repo
 RUN <<END_OF_BLOCK
 set -eu
 
-echo "Add and enable RPMFusion repos install nasty things like evil (proptietary) codecs."
+REL=$(rpm -E %fedora)
+
 dnf -y install \
-	https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-	https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+	https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$REL.noarch.rpm \
+	https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$REL.noarch.rpm
 
 dnf -y install rpmfusion-free-release-tainted rpmfusion-nonfree-release-tainted
 
-dnf -y --repo=rpmfusion-nonfree-tainted --repo=rpmfusion-free-tainted install "*-firmware"
+dnf -y --repo=rpmfusion-nonfree-tainted --repo=rpmfusion-free-tainted install \
+	"*-firmware"
+
 dnf -y clean all
 END_OF_BLOCK
 
@@ -51,7 +53,7 @@ RUN dnf -y install --setopt="install_weak_deps=False" \
 	pass \
 	htop \
 	mc \
-	toolbox &&\
+	toolbox && \
 	dnf -y clean all
 
 # Developer tools, libraries and documentation.
@@ -92,7 +94,6 @@ RUN dnf -y install --setopt="install_weak_deps=False" \
 # Install local packages if provided
 RUN <<END_OF_BLOCK
 set -eu
-echo "Installing local packages."
 ARCH=$(arch)
 shopt -s extglob
 shopt -s nullglob
@@ -125,22 +126,18 @@ LABEL org.opencontainers.image.name=${imagename} \
 
 # Final configuration
 RUN <<END_OF_BLOCK
-echo "Writing image version information"
+set -eu
+
 echo "IMAGE_ID=${imagename}" >>/usr/lib/os-release
 echo "IMAGE_VERSION=${buildid}" >>/usr/lib/os-release
 
-echo "Enable services."
 systemctl enable \
 	cockpit.socket \
 	sshd \
 	systemd-zram-setup@zram0.service \
 	bootc-fetch-update-only.timer
 
-echo "Masking update timer."
 systemctl mask bootc-fetch-apply-updates.timer
-
 find /var/{log,cache} -type f ! -empty -delete
-
 bootc container lint
-echo "The magic is done!"
 END_OF_BLOCK
