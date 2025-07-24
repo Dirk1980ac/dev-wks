@@ -4,14 +4,17 @@ FROM registry.fedoraproject.org/fedora-bootc:latest
 ENV imagename="dev-wks"
 
 # Install basic system
-RUN dnf install -y --exclude="rootfiles" --setopt="install_weak_deps=False" \
+RUN dnf install -y \
+	--exclude="rootfiles" \
+	--exclude="virtualbox-guest-additions" \
+	--setopt="install_weak_deps=False" \
 	@^workstation-product-environment usbutils && dnf -y clean all
 
 # Copy vscode repository
 COPY --chmod=644 configs/dnf-vscode.repo /etc/yum.repos.d/vscode.repo
 
 # Setup install addidional packaged
-RUN <<END_OF_BLOCK
+RUN --mount=type=bind,source=./packages,target=/packages <<END_OF_BLOCK
 set -eu
 
 echo "Add and enable RPMFusion repos install nasty things like evil (proptietary) codecs."
