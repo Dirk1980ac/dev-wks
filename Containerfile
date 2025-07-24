@@ -8,13 +8,19 @@ RUN dnf install -y \
 	--exclude="rootfiles" \
 	--exclude="virtualbox-guest-additions" \
 	--setopt="install_weak_deps=False" \
-	@^workstation-product-environment usbutils && dnf -y clean all
+	@^workstation-product-environment \
+	usbutils \
+	freeipa-client \
+	zsh \
+	glibc-all-langpacks && \
+	dnf -y clean all
 
-# Copy vscode repository
+
+# Copy vscode repository.
 COPY --chmod=644 configs/dnf-vscode.repo /etc/yum.repos.d/vscode.repo
 
-# Setup install addidional packaged
-RUN --mount=type=bind,source=./packages,target=/packages <<END_OF_BLOCK
+# RPMFusion Repositories and additional firmware packages from there
+RUN <<END_OF_BLOCK
 set -eu
 
 echo "Add and enable RPMFusion repos install nasty things like evil (proptietary) codecs."
@@ -23,12 +29,13 @@ dnf -y install \
 	https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
 dnf -y install rpmfusion-free-release-tainted rpmfusion-nonfree-release-tainted
-dnf -y --repo=rpmfusion-nonfree-tainted --repo=rpmfusion-free-tainted install "*-firmware"
 
-dnf -y install --setopt="install_weak_deps=False" \
-	glibc-all-langpacks \
-	zsh \
-	freeipa-client \
+dnf -y --repo=rpmfusion-nonfree-tainted --repo=rpmfusion-free-tainted install "*-firmware"
+dnf -y clean all
+END_OF_BLOCK
+
+# Tools and admin stuff.
+RUN dnf -y install --setopt="install_weak_deps=False" \
 	cockpit \
 	cockpit-selinux \
 	cockpit-storaged \
@@ -36,26 +43,38 @@ dnf -y install --setopt="install_weak_deps=False" \
 	cockpit-system \
 	cockpit-networkmanager \
 	cockpit-ostree \
-	htop \
-	mc \
+	yubikey-manager \
+	pcsc-tools \
 	testdisk \
 	sleuthkit \
 	f3 \
 	pass \
-	yubikey-manager \
-	pcsc-tools \
-	toolbox \
+	htop \
+	mc \
+	toolbox &&\
+	dnf -y clean all
+
+# Developer tools, libraries and documentation.
+RUN dnf -y install --setopt="install_weak_deps=False" \
 	@development-tools \
-	mingw64-libssh2 \
-	mingw64-gtk4 \
-	mingw64-glib2 \
 	@c-development \
 	glib2-devel \
 	gtk4-devel \
 	mariadb-connector-c-devel \
 	pcsc-lite-devel \
 	libevent-devel \
+	mingw64-libssh2 \
+	mingw64-gtk4 \
+	mingw64-glib2 \
 	sqlite-devel \
+	gtk4-devel-docs \
+	glib2-doc \
+	pcsc-lite-doc \
+	glibc-doc &&\
+	dnf -y clean all
+
+# GUI applications
+RUN dnf -y install --setopt="install_weak_deps=False" \
 	fedora-chromium-config-gssapi \
 	fedora-chromium-config \
 	fedora-chromium-config-gssapi \
@@ -66,14 +85,13 @@ dnf -y install --setopt="install_weak_deps=False" \
 	sqlitebrowser \
 	chromium \
 	evolution \
-	bootc-gtk \
-	gtk4-devel-docs \
-	glib2-doc \
-	pcsc-lite-doc \
-	glibc-doc \
 	virt-manager \
-	gnome-extensions-app
+	gnome-extensions-app &&\
+	dnf -y clean all
 
+# Install local packages if provided
+RUN <<END_OF_BLOCK
+set -eu
 echo "Installing local packages."
 ARCH=$(arch)
 shopt -s extglob
@@ -93,7 +111,7 @@ COPY --chmod=644 configs/rpm-ostreed.conf /etc/rpm-ostreed.conf
 COPY --chmod=644 configs/containers-toolbox.conf /etc/containers/toolbox.conf
 COPY --chmod=644 configs/containers-policy.json /etc/containers/policy.json
 COPY --chmod=644 static/dirk1980.pub /usr/share/containers/dirk1980.pub
-COPY systemd /usr/lib/systemd/system
+COPY --chmod=644 systemd /usr/lib/systemd/system
 COPY skel /etc/skel
 
 # Add metadata after package installation to avoid a rebuilding the whole image
@@ -121,7 +139,7 @@ systemctl enable \
 echo "Masking update timer."
 systemctl mask bootc-fetch-apply-updates.timer
 
-rm /var/{log,cache}/* -rf
+find /var/{log,cache} -type f ! -empty -delete
 
 bootc container lint
 echo "The magic is done!"
