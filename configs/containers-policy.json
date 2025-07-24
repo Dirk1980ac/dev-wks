@@ -9,14 +9,22 @@
 			"docker.io/dirk1980/dev-wks": [
 				{
 					"type": "sigstoreSigned",
-					"keyPath": "/usr/share/containers/dirk1980.pub",
+					"keyPaths": [
+						"/usr/share/containers/dirk1980.pub",
+						"/usr/share/containers/dirk1980-backup.pub"
+					],
 					"signedIdentity": {
 						"type": "matchRepoDigestOrExact"
 					}
-				},
+				}
+			],
+			"docker.io/dirk1980/dev-toolbox": [
 				{
 					"type": "sigstoreSigned",
-					"keyPath": "/usr/share/containers/dirk1980-backup.pub",
+					"keyPaths": [
+						"/usr/share/containers/dirk1980.pub",
+						"/usr/share/containers/dirk1980-backup.pub"
+					],
 					"signedIdentity": {
 						"type": "matchRepoDigestOrExact"
 					}
