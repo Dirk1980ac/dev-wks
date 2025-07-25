@@ -118,6 +118,8 @@ COPY --chmod=644 configs/containers-toolbox.conf /etc/containers/toolbox.conf
 COPY --chmod=644 configs/containers-policy.json /etc/containers/policy.json
 COPY --chmod=644 keys/dirk1980.pub /usr/share/containers/dirk1980.pub
 COPY --chmod=644 keys/dirk1980-backup.pub /usr/share/containers/dirk1980-backup.pub
+COPY --chmod=644 keys/glockgmbh.pub /usr/share/containers/glockgmbh.pub
+COPY --chmod=644 keys/glockgmbh-backup.pub /usr/share/containers/glockgmbh-backup.pub
 
 # Add metadata after package installation to avoid a rebuilding the whole image
 # if it is not necessary.
