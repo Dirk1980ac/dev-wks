@@ -140,7 +140,8 @@ systemctl enable \
 	cockpit.socket \
 	sshd \
 	systemd-zram-setup@zram0.service \
-	bootc-fetch-update-only.timer
+	bootc-fetch-update-only.timer \
+	bootloader-update.service
 
 systemctl mask bootc-fetch-apply-updates.timer
 find /var/{log,cache} -type f ! -empty -delete
