@@ -114,7 +114,6 @@ COPY --chmod=644 configs/containers-toolbox.conf /etc/containers/toolbox.conf
 COPY --chmod=644 configs/containers-policy.json /usr/share/containers/policy.json
 COPY --chmod=644 keys /usr/share/containers/keys
 
-
 # Add metadata after package installation to avoid a rebuilding the whole image
 # if it is not necessary.
 ARG buildid="unset"
@@ -131,8 +130,9 @@ set -eu
 dnf -y clean all
 
 chown 755 /usr/share/containers/keys
-chown 644 /usr/share/containers/keys/*
 rm -f /etc/containers/policy.json
+rm -rf /etc/containers/registries.conf.d
+ln -s /usr/share/containers/registries.d/sigstore.yaml /etc/containers/registries.d/sigstore.yaml
 ln -s /usr/share/containers/policy.json /etc/containers/policy.json
 
 echo "IMAGE_ID=${imagename}" >>/usr/lib/os-release
