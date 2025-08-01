@@ -105,6 +105,7 @@ COPY --chmod=644 configs/polkit-40-freeipa.rules /etc/polkit-1/rules.d/40-freeip
 COPY --chmod=600 configs/sshd-00-0local.conf /etc/ssh/sshd_config.d/00-0local.conf
 COPY --chmod=644 configs/rpm-ostreed.conf /etc/rpm-ostreed.conf
 COPY --chmod=644 systemd /usr/lib/systemd/system
+COPY --chmod=600 authorized_keys /usr/ssh/root.keys
 COPY skel /etc/skel
 
 # Image signature settings
