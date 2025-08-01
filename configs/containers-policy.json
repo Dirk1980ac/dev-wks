@@ -10,8 +10,8 @@
 				{
 					"type": "sigstoreSigned",
 					"keyPaths": [
-						"/usr/share/containers/dirk1980.pub",
-						"/usr/share/containers/dirk1980-backup.pub"
+						"/usr/share/containers/keys/dirk1980.pub",
+						"/usr/share/containers/keys/dirk1980-backup.pub"
 					]
 				}
 			],
@@ -19,10 +19,10 @@
 				{
 					"type": "sigstoreSigned",
 					"keyPaths": [
-						"/usr/share/containers/glockgmbh.pub",
-						"/usr/share/containers/glockgmbh-backup.pub",
-						"/usr/share/containers/dirk1980.pub",
-						"/usr/share/containers/dirk1980-backup.pub"
+						"/usr/share/containers/keys/glockgmbh.pub",
+						"/usr/share/containers/keys/glockgmbh-backup.pub",
+						"/usr/share/containers/keys/dirk1980.pub",
+						"/usr/share/containers/keys/dirk1980-backup.pub"
 					]
 				}
 			]
