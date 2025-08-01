@@ -20,7 +20,9 @@
 					"type": "sigstoreSigned",
 					"keyPaths": [
 						"/usr/share/containers/glockgmbh.pub",
-						"/usr/share/containers/glockgmbh-backup.pub"
+						"/usr/share/containers/glockgmbh-backup.pub",
+						"/usr/share/containers/dirk1980.pub",
+						"/usr/share/containers/dirk1980-backup.pub"
 					]
 				}
 			]

@@ -104,13 +104,11 @@ COPY --chmod=644 systemd /usr/lib/systemd/system
 COPY skel /etc/skel
 
 # Image signature settings
-COPY --chmod=644 configs/registries-sigstore.yaml /etc/containers/registries.d/sigstore.yaml
+COPY --chmod=644 configs/registries-sigstore.yaml /usr/share/containers/registries.d/sigstore.yaml
 COPY --chmod=644 configs/containers-toolbox.conf /etc/containers/toolbox.conf
-COPY --chmod=644 configs/containers-policy.json /etc/containers/policy.json
-COPY --chmod=644 keys/dirk1980.pub /usr/share/containers/dirk1980.pub
-COPY --chmod=644 keys/dirk1980-backup.pub /usr/share/containers/dirk1980-backup.pub
-COPY --chmod=644 keys/glockgmbh.pub /usr/share/containers/glockgmbh.pub
-COPY --chmod=644 keys/glockgmbh-backup.pub /usr/share/containers/glockgmbh-backup.pub
+COPY --chmod=644 configs/containers-policy.json /usr/share/containers/policy.json
+COPY --chmod=644 keys /usr/share/containers/keys
+
 
 # Add metadata after package installation to avoid a rebuilding the whole image
 # if it is not necessary.
@@ -126,6 +124,11 @@ RUN <<END_OF_BLOCK
 set -eu
 
 dnf -y clean all
+
+chown 755 /usr/share/containers/keys
+chown 644 /usr/share/containers/keys/*
+rm -f /etc/containers/policy.json
+ln -s /usr/share/containers/policy.json /etc/containers/policy.json
 
 echo "IMAGE_ID=${imagename}" >>/usr/lib/os-release
 echo "IMAGE_VERSION=${buildid}" >>/usr/lib/os-release
