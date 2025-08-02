@@ -43,7 +43,6 @@ RUN dnf -y install --setopt="install_weak_deps=False" \
 	cockpit-bridge \
 	cockpit-system \
 	cockpit-networkmanager \
-	cockpit-ostree \
 	yubikey-manager \
 	pcsc-tools \
 	testdisk \
