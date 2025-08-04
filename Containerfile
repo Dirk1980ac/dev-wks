@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora-bootc:latest
+FROM quay.io/fedora/fedora-bootc:latest
 
 # Set image name
 ENV imagename="dev-wks"
@@ -9,10 +9,7 @@ RUN dnf install -y \
 	--exclude="virtualbox-guest-additions" \
 	--setopt="install_weak_deps=False" \
 	@^workstation-product-environment \
-	usbutils \
-	freeipa-client \
-	zsh \
-	glibc-all-langpacks && dnf clean packages
+	usbutils && dnf clean packages
 
 # Copy vscode repository.
 COPY --chmod=644 configs/dnf-vscode.repo /etc/yum.repos.d/vscode.repo
@@ -37,6 +34,9 @@ END_OF_BLOCK
 
 # Tools and admin stuff.
 RUN dnf -y install --setopt="install_weak_deps=False" \
+	freeipa-client \
+	zsh \
+	glibc-all-langpacks \
 	cockpit \
 	cockpit-selinux \
 	cockpit-storaged \
