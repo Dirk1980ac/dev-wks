@@ -51,6 +51,8 @@ RUN dnf -y install --setopt="install_weak_deps=False" \
 	pass \
 	htop \
 	mc \
+	pass \
+	pass-otp \
 	toolbox && dnf clean packages
 
 # Developer tools, libraries and documentation.
@@ -87,7 +89,7 @@ RUN dnf -y install --setopt="install_weak_deps=False" \
 	gnome-extensions-app && dnf clean packages
 
 # Install local packages if provided
-RUN <<END_OF_BLOCK
+RUN --mount=type=bind,source=./packages,target=/packages <<END_OF_BLOCK
 set -eu
 shopt -s extglob
 shopt -s nullglob
