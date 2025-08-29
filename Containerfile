@@ -136,11 +136,14 @@ rm -rf /etc/containers/registries.conf.d
 ln -s /usr/share/containers/registries.d/sigstore.yaml /etc/containers/registries.d/sigstore.yaml
 ln -s /usr/share/containers/policy.json /etc/containers/policy.json
 
-{echo "IMAGE_ID=${imagename}";	echo "IMAGE_VERSION=${buildid}";} >>/usr/lib/os-release
+echo "IMAGE_ID=${imagename}" >>/usr/lib/os-release
+echo "IMAGE_VERSION=${buildid}" >>/usr/lib/os-release
 
-if [ -n "$sshkeys" ]; then
+if [[ -n "$sshkeys" ]]; then
+	mkdir -p /usr/ssh
 	echo $sshkeys > /usr/ssh/root.pub
 fi
+
 systemctl enable \
 	cockpit.socket \
 	sshd \
