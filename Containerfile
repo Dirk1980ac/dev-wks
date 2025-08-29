@@ -106,7 +106,6 @@ COPY --chmod=644 configs/polkit-40-freeipa.rules /etc/polkit-1/rules.d/40-freeip
 COPY --chmod=600 configs/sshd-00-0local.conf /etc/ssh/sshd_config.d/00-0local.conf
 COPY --chmod=644 configs/rpm-ostreed.conf /etc/rpm-ostreed.conf
 COPY --chmod=644 systemd /usr/lib/systemd/system
-COPY --chmod=600 authorized_keys /usr/ssh/root.keys
 COPY skel /etc/skel
 
 # Image signature settings
@@ -117,6 +116,7 @@ COPY --chmod=644 keys /usr/share/containers/keys
 
 # Add metadata after package installation to avoid a rebuilding the whole image
 # if it is not necessary.
+ARG sshkeys=""
 ARG buildid="unset"
 LABEL org.opencontainers.image.name=${imagename} \
 	org.opencontainers.image.version=${buildid} \
@@ -136,9 +136,11 @@ rm -rf /etc/containers/registries.conf.d
 ln -s /usr/share/containers/registries.d/sigstore.yaml /etc/containers/registries.d/sigstore.yaml
 ln -s /usr/share/containers/policy.json /etc/containers/policy.json
 
-echo "IMAGE_ID=${imagename}" >>/usr/lib/os-release
-echo "IMAGE_VERSION=${buildid}" >>/usr/lib/os-release
+{echo "IMAGE_ID=${imagename}";	echo "IMAGE_VERSION=${buildid}";} >>/usr/lib/os-release
 
+if [ -n "$sshkeys" ]; then
+	echo $sshkeys > /usr/ssh/root.pub
+fi
 systemctl enable \
 	cockpit.socket \
 	sshd \
