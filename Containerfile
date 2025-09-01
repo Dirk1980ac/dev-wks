@@ -152,6 +152,6 @@ systemctl enable \
 	bootloader-update.service
 
 systemctl mask bootc-fetch-apply-updates.timer
-find /var/{log,cache} -type f ! -empty -delete
+rm -rf /var/{cache,log,tmp,spool}/*
 bootc container lint
 END_OF_BLOCK
