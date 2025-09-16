@@ -9,7 +9,7 @@ RUN dnf install -y \
 	--exclude="virtualbox-guest-additions" \
 	--setopt="install_weak_deps=False" \
 	@^workstation-product-environment \
-	usbutils && dnf clean packages
+	usbutils
 
 # Copy vscode repository.
 COPY --chmod=644 configs/dnf-vscode.repo /etc/yum.repos.d/vscode.repo
@@ -29,7 +29,6 @@ dnf -y install rpmfusion-free-release-tainted rpmfusion-nonfree-release-tainted
 dnf -y --repo=rpmfusion-nonfree-tainted --repo=rpmfusion-free-tainted install \
 	"*-firmware"
 
-dnf clean packages
 END_OF_BLOCK
 
 # Tools and admin stuff.
@@ -53,7 +52,7 @@ RUN dnf -y install --setopt="install_weak_deps=False" \
 	mc \
 	pass \
 	pass-otp \
-	toolbox && dnf clean packages
+	toolbox
 
 # Developer tools, libraries and documentation.
 RUN dnf -y install --setopt="install_weak_deps=False" \
@@ -71,7 +70,7 @@ RUN dnf -y install --setopt="install_weak_deps=False" \
 	gtk4-devel-docs \
 	glib2-doc \
 	pcsc-lite-doc \
-	glibc-doc && dnf clean packages
+	glibc-doc
 
 # GUI applications
 RUN dnf -y install --setopt="install_weak_deps=False" \
@@ -86,7 +85,7 @@ RUN dnf -y install --setopt="install_weak_deps=False" \
 	chromium \
 	evolution \
 	virt-manager \
-	gnome-extensions-app && dnf clean packages
+	gnome-extensions-app
 
 # Install local packages if provided
 RUN --mount=type=bind,source=./packages,target=/packages <<END_OF_BLOCK
@@ -97,8 +96,6 @@ shopt -s nullglob
 for file in /packages/*.@($(arch).rpm|noarch.rpm); do
 	dnf -y install "$file"
 done
-
-dnf clean packages
 END_OF_BLOCK
 
 # System Configuration
